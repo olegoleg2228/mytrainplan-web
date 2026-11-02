@@ -17,15 +17,17 @@ export function welcome(update) {
   const text = m.text.trim();
   if (privateChat && /^\/start(?:@mytrainplan_bot)?(?:\s.*)?$/i.test(text)) return {
     chat_id: m.chat.id,
-    text: 'Мой тренировочный план\n\nОткрывай тренировки, записывай результаты и следи за прогрессом вместе с тренером.\n\nПри первом входе подключи кабинет одноразовым кодом из браузерной версии: Кабинет → Telegram → Получить код.',
-    reply_markup: {inline_keyboard: [[{text:'Открыть приложение',web_app:{url:APP_URL}}]]}
+    parse_mode:'HTML',
+    text: '🏋️ <b>Мой тренировочный план</b>\n\n📅 Открывай свои тренировки\n📝 Записывай результаты\n📈 Следи за прогрессом вместе с тренером\n\n🔑 <b>Первый вход?</b>\nПолучи одноразовый код в браузерной версии: <b>Кабинет → Telegram → Получить код</b>. Введи его в приложении — и твой план всегда под рукой.',
+    reply_markup: {inline_keyboard: [[{text:'Открыть приложение',style:'primary',web_app:{url:APP_URL}}]]}
   };
   if (groupChat && /^\/plan(?:@mytrainplan_bot)?$/i.test(text) &&
       (Number.isSafeInteger(m.from?.id) || m.sender_chat?.id === m.chat.id)) return {
     chat_id:m.chat.id,
     ...(Number.isSafeInteger(m.message_thread_id) ? {message_thread_id:m.message_thread_id} : {}),
-    text:'Мой тренировочный план\n\nТренировки и результаты — в одном приложении. Нажми кнопку ниже, чтобы открыть свой личный кабинет.',
-    reply_markup:{inline_keyboard:[[{text:'Открыть приложение',url:MINI_APP_LINK}]]}
+    parse_mode:'HTML',
+    text:'🏋️ <b>Мой тренировочный план</b>\n\n📅 Тренировки · 📝 Результаты · 📈 Прогресс\n\nНажми кнопку ниже, чтобы открыть свой личный кабинет.',
+    reply_markup:{inline_keyboard:[[{text:'Открыть приложение',style:'primary',url:MINI_APP_LINK}]]}
   };
   return null;
 }

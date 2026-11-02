@@ -5,9 +5,10 @@ const start = (id=1) => ({update_id:id,message:{chat:{id:123,type:'private'},fro
 test('start returns inline mini app button for the production app', () => {
   const result = welcome(start());
   assert.equal(result.chat_id,123);
-  assert.deepEqual(result.reply_markup.inline_keyboard,[[{text:'Открыть приложение',web_app:{url:APP_URL}}]]);
+  assert.deepEqual(result.reply_markup.inline_keyboard,[[{text:'Открыть приложение',style:'primary',web_app:{url:APP_URL}}]]);
   assert.equal(result.reply_markup.keyboard,undefined);
-  assert.match(result.text,/одноразовым кодом/);
+  assert.equal(result.parse_mode,'HTML');
+  assert.match(result.text,/одноразовый код/);
   for (const text of ['/start payload','/start@mytrainplan_bot','/start@mytrainplan_bot payload']) {
     const update=start();update.message.text=text;assert.ok(welcome(update));
   }
@@ -49,7 +50,7 @@ test('only group administrators can publish the pinnable app message', async () 
   });
   await process(update);assert.equal(sent.length,0);
   role='administrator';await process(update);assert.equal(sent.length,1);
-  assert.deepEqual(sent[0].reply_markup.inline_keyboard,[[{text:'Открыть приложение',url:MINI_APP_LINK}]]);
+  assert.deepEqual(sent[0].reply_markup.inline_keyboard,[[{text:'Открыть приложение',style:'primary',url:MINI_APP_LINK}]]);
   assert.equal(sent[0].message_thread_id,7);
   await process(update);assert.equal(sent.length,1);
 });
